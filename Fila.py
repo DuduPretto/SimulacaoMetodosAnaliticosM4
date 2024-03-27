@@ -23,39 +23,46 @@ class Fila():
         self.intervaloChegada = intervaloChegada
         self.intervaloAtendimento = intervaloAtendimento
         self.escalonador = escalonador
+        for i in range(capacidade + 1):
+            self.acumuladorTempo.append(0)
 
 
-    def nextRandom():
+    def nextRandom(self):
         a = 3
         c = 10
         M = 21342141243
-        pseudoPuro = ((ultimoNumero * a) + c) % M
-        ultimoNumero = pseudoPuro
+        pseudoPuro = ((self.ultimoNumero * a) + c) % M
+        self.ultimoNumero = pseudoPuro
 
         return pseudoPuro / M
     
 
     def acumulaTempo(self, evento: Evento):
-        if evento.tipo == TipoEvento.CHEGADA:
-            self.acumuladorTempo[self.statusAtual - 1] += evento.tempo - self.tempoTotal
-        else:
-            self.acumuladorTempo[self.statusAtual + 1] += evento.tempo - self.tempoTotal
+        deltaTempo = evento.tempo - self.tempoTotal
+        self.acumuladorTempo[self.statusAtual] += deltaTempo
+        self.tempoTotal += deltaTempo
 
 
-    def chegada(self, evento: Evento):
+    def chegada(self, evento: Evento, count: int):
         if self.statusAtual < self.capacidade:
+            self.acumulaTempo(evento)
             self.statusAtual += 1
             self.fila.append(evento)
-            self.acumulaTempo(evento)
             if self.statusAtual <= self.nroServidores:
                 self.escalonador.add(((self.intervaloAtendimento[1] - self.intervaloAtendimento[0]) * self.nextRandom() + self.intervaloAtendimento[0]) + self.tempoTotal, TipoEvento.SAIDA)
+                count -= 1
         else:
             self.perdas += 1
-        self.escalonador.add(((self.intervaloChegada[1] - self.intervaloChegada[0]) * self.nextRandom() + self.intervaloChegada[0]) + self.tempoTotal, TipoEvento.CHEGADA)    
+        self.escalonador.add(((self.intervaloChegada[1] - self.intervaloChegada[0]) * self.nextRandom() + self.intervaloChegada[0]) + self.tempoTotal, TipoEvento.CHEGADA)
+        count -= 1
+        return count
 
-    def saida(self, evento: Evento):
-        self.statusAtual -= 1
+    def saida(self, evento: Evento, count: int):
         self.acumulaTempo(evento)
+        self.statusAtual -= 1
         if self.statusAtual >= self.nroServidores:
             self.escalonador.add(((self.intervaloAtendimento[1] - self.intervaloAtendimento[0]) * self.nextRandom() + self.intervaloAtendimento[0]) + self.tempoTotal, TipoEvento.SAIDA)          
+            count -= 1
+
+        return count
 
