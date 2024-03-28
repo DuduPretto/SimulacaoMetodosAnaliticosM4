@@ -23,16 +23,14 @@ def main():
             count = fila.saida(eventoAtual, count)
         aux += 1
 
-    print("Informações da Fila:")
+    print("------------Informações da Fila------------\n")
 
     for i in range(fila.capacidade + 1):
-        print(f"Tempo acumulado no estado {i}: {fila.acumuladorTempo[i]}")
-        print(f"Probabilidade de {i} clientes na fila: {fila.acumuladorTempo[i] / fila.tempoTotal}")
-        print("---------------------------------")
+        output_string = f"{i} : {fila.acumuladorTempo[i]} ({fila.acumuladorTempo[i] / fila.tempoTotal * 100:.10f}%)"
+        print(output_string)
 
-    print("tempo total: ", fila.tempoTotal)
-    print(aux)
-    print(fila.perdas)
+    print("\nTempo total: ", fila.tempoTotal)
+    print("\Total de perdas: ", fila.perdas)
 
 if __name__ == "__main__":
     main()
