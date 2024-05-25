@@ -18,7 +18,7 @@ class Evento():
     def getTipo(self):
         return self.tipo
 
-    def getTempo(self):
+    def getTempo(self) -> float:
         return self.tempo
 
     def getFila1(self):
@@ -26,3 +26,6 @@ class Evento():
 
     def getFila2(self):
         return self.fila2
+    
+    def __lt__(self, other: 'Evento') -> bool:
+        return self.tempo < other.tempo

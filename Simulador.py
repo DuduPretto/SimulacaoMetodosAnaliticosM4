@@ -17,16 +17,16 @@ class Simulador():
         self.filas = filas
 
     def escalonar(self, evento: Evento):
-        if Evento.tipo == TipoEvento.CHEGADA:
-            self.chegada(evento.getfila1())
-        elif Evento.tipo == TipoEvento.SAIDA:
-            self.saida(self.evento.getfila1())
+        if evento.tipo == TipoEvento.CHEGADA:
+            self.chegada(evento.getFila1())
+        elif evento.tipo == TipoEvento.SAIDA:
+            self.saida(evento.getFila2())
         else:
-            self.transferencia(evento.getfila1(), evento.getfila2())
+            self.transferencia(evento.getFila1(), evento.getFila2())
 
     def adicionaEscalonador(self, min, max, tipo, fila1, fila2):
         tempo = min + (max - min) * self.nextRandom()
-        evento = Evento(tempo + self.tempoTotal, tipo, fila1, fila2)
+        evento = Evento(tipo, tempo + self.tempoTotal, fila1, fila2)
         self.escalonador.append(evento)
         self.nrosUsados += 1
 
@@ -34,21 +34,22 @@ class Simulador():
         self.escalonador.append(primeiroEvento)
 
         while(self.nrosUsados < contagem):
-            self.escalonador.sort(key=lambda evento: evento.getTempo())
+            print(self.escalonador[0].getTempo())
+            self.escalonador.sort()
             
             proximoEvento = self.escalonador.pop()
             
             for fila in self.filas:
-                fila.times[fila.filaSize] = self.calculaTempo(fila, proximoEvento)
+                fila.times[fila.capacidade] = self.calculaTempo(fila, proximoEvento)
 
-            self.tempoTotal = proximoEvento.getTime()
+            self.tempoTotal = proximoEvento.getTempo()
 
             self.escalonar(proximoEvento)
 
 
 
     def calculaTempo(self, fila: Fila, evento: Evento):
-        tempo = fila.tempos[fila.capacidade] + (evento.tempo - self.tempoTotal)
+        tempo = fila.times[fila.capacidade] + (evento.tempo - self.tempoTotal)
         return tempo
 
     def addFilaDestino(self, id, fila: Fila):
@@ -75,9 +76,9 @@ class Simulador():
                 self.addFilaDestino(identificador, fila)
 
         else:
-            fila.perdas += 1
+            fila.clientesPerdidos += 1
         
-        self.adicionaEscalonador(fila.intervaloAtendimento[0], fila.intervaloAtendimento[1], TipoEvento.CHEGADA, fila)
+        self.adicionaEscalonador(fila.intervaloAtendimento[0], fila.intervaloAtendimento[1], TipoEvento.CHEGADA, fila, None)
 
     def saida(self, fila: Fila):
         fila.statusAtual -= 1
