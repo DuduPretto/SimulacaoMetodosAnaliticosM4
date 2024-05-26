@@ -1,4 +1,4 @@
-# from Escalonador import Escalonador
+import yaml
 from Evento import Evento
 from TipoEvento import TipoEvento
 from Fila import Fila
@@ -38,11 +38,16 @@ from Simulador import Simulador
 
 
 def main():
+
+    with open('dados.yml', 'r') as f:
+        data = yaml.load(f, Loader=yaml.SafeLoader)
+        print(data)
+
     
     listaFilas: list = []
     
-    primeiraChegada: int = 2
-    repeticoes: int = 100000
+    primeiraChegada: int = data['arrivals']["Q1"]
+    repeticoes: int = data['rndnumbersPerSeed']
 
     n1: list = []
     n1.append("q2-0.8")
@@ -64,7 +69,7 @@ def main():
     
     evento = Evento(TipoEvento.CHEGADA, primeiraChegada, listaFilas[0], None)
 
-    simulador = Simulador(73, listaFilas)
+    simulador = Simulador(data["seed"][0], listaFilas)
 
     simulador.executa(evento, repeticoes)
 

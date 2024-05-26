@@ -34,7 +34,7 @@ class Simulador():
         self.escalonador.append(primeiroEvento)
 
         while(self.nrosUsados < contagem):
-            print(self.escalonador[0].getTempo())
+            # print(self.escalonador[0].getTempo())
             self.escalonador.sort()
             
             proximoEvento = self.escalonador.pop()
