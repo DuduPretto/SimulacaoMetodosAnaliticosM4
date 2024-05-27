@@ -28,7 +28,7 @@ class Fila():
         tempos = [0] * (self.capacidade + 1)
 
         # tempos = np.zeros(self.capacidade)
-        print(tempos)
+        #print(tempos)
     
 
 

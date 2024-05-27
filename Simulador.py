@@ -65,8 +65,6 @@ class Simulador():
             self.adicionaEscalonador(filaDestino.intervaloAtendimento[0], filaDestino.intervaloAtendimento[0], TipoEvento.PASSAGEM, fila, filaDestino)
 
 
-
-
     def chegada(self, fila: Fila):
         if fila.statusAtual < fila.capacidade:
             fila.statusAtual += 1

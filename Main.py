@@ -41,7 +41,7 @@ def main():
 
     with open('dados.yml', 'r') as f:
         data = yaml.load(f, Loader=yaml.SafeLoader)
-        print(data)
+        #print(data)
 
     
     listaFilas: list = []
@@ -79,6 +79,12 @@ def main():
         print("Infos:")
 
         print("Fila: (G/G/", fila.nroServidores, "/" ,fila.capacidade, ")")
+
+        #print("\nTempo total: ", fila.tempoTotal)
+        print("Total de clientes perdidos: ", fila.clientesPerdidos)
+        print("Tempos acumulados: ", fila.times)
+    
+    print("Tempo total: ", simulador.tempoTotal)
 
         
     
